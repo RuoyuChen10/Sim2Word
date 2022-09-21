@@ -1,5 +1,5 @@
 # Sim2Word
-Official implement of our work: Sim2Word
+Official implement of our work: Sim2Word: Explaining Similarity with Representative Attribute Words via Counterfactual Explanations
 
 Code will be released soon.
 
