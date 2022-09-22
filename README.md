@@ -1,4 +1,9 @@
 # Sim2Word
+
+![Python 3.8](https://img.shields.io/badge/python-3.8-green.svg?style=plastic)
+![Pytorch 1.7.1](https://img.shields.io/badge/pytorch-1.7.1-green.svg?style=plastic)
+![License CC BY-NC](https://img.shields.io/badge/license-Apache_2.0-green.svg?style=plastic)
+
 The official implementation of our work: Sim2Word: Explaining Similarity with Representative Attribute Words via Counterfactual Explanations
 
 Code will be released soon.
@@ -49,7 +54,7 @@ If you want to train your own face recognition model, you can refer our work fro
 
 If you find this work is helpful for your research, please consider cite our work:
 
-```shell
+```bibtex
 @article{chen2022sim2word,
   title   = {Sim2Word: Explaining Similarity with Representative Attribute Words via Counterfactual Explanations},
   author  = {Chen, Ruoyu and Li, Jingzhi and Zhang, Hua and Sheng, Changchong and Liu, Li and Cao, Xiaochun},
