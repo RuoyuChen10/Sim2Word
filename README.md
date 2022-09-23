@@ -118,7 +118,7 @@ There also some strategies in our paper, which mentioned in Section 5.5. For the
 
 ## Method Comparision
 
-![](images/Fig4.png)
+![](images/Fig4.jpg)
 
 Please refer to fold [Explainable-Framework-Comparison](./Explainable-Framework-Comparison), and follow their command to implement the results.
 
