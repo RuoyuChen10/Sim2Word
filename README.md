@@ -6,7 +6,7 @@
 
 The official implementation of our work: Sim2Word: Explaining Similarity with Representative Attribute Words via Counterfactual Explanations
 
-Code will be released soon.
+![](images/Fig1.png)
 
 ## Pre-train Model
 
@@ -52,6 +52,8 @@ If you want to train your own face recognition model, you can refer our work fro
 
 ## The frame work of interpreting similarity
 
+![](images/Fig2.png)
+
 It's paper's Section 3 implementation, please refer to `Scores-sameid.py`, or refer to `Multi_Identity_topk.py` (set `topk = 1`).
 
 ```shell
@@ -86,6 +88,8 @@ python Top_5_attributes.py
 
 ## Interpreting Face Identification
 
+![](images/Fig3.png)
+
 This section refer to the Section 4 of the paper. And also the results of Fig. 9.
 
 First, to get the inter results:
@@ -113,6 +117,8 @@ you can get some visualization like:
 There also some strategies in our paper, which mentioned in Section 5.5. For the topk strategy please refer to [Multi_Identity_topk.py](Multi_Identity_topk.py), and threshold strategy refers to [Multi_identity_thresh.py](Multi_identity_thresh.py).
 
 ## Method Comparision
+
+![](images/Fig4.png)
 
 Please refer to fold [Explainable-Framework-Comparison](./Explainable-Framework-Comparison), and follow their command to implement the results.
 
