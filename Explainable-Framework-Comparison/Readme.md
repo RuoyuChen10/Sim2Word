@@ -29,7 +29,7 @@ Results:
 
 cite:
 
-```
+```bibtex
 @inproceedings{williford2020explainable,
   title={Explainable Face Recognition},
   author={Williford, Jonathan R and May, Brandon B and Byrne, Jeffrey},
@@ -40,12 +40,15 @@ cite:
 }
 ```
 
-```
-@article{Lin2020xCosAE,
-  title={xCos: An Explainable Cosine Metric for Face Verification Task},
-  author={Yu-sheng Lin and Zheyu Liu and Yuan Chen and Yu-Siang Wang and Hsin-Ying Lee and Yirong Chen and Ya-Liang Chang and Winston H. Hsu},
-  journal={ArXiv},
-  year={2020},
-  volume={abs/2003.05383}
+```bibtex
+@article{lin2021xcos,
+  title={xCos: An explainable cosine metric for face verification task},
+  author={Lin, Yu-Sheng and Liu, Zhe-Yu and Chen, Yu-An and Wang, Yu-Siang and Chang, Ya-Liang and Hsu, Winston H},
+  journal={ACM Transactions on Multimedia Computing, Communications, and Applications (TOMM)},
+  volume={17},
+  number={3s},
+  pages={1--16},
+  year={2021},
+  publisher={ACM New York, NY}
 }
 ```
