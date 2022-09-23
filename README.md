@@ -50,6 +50,75 @@ If you want to train your own face recognition model, you can refer our work fro
 - CosFace Loss
 - Softmax Loss
 
+## The frame work of interpreting similarity
+
+It's paper's Section 3 implementation, please refer to `Scores-sameid.py`, or refer to `Multi_Identity_topk.py` (set `topk = 1`).
+
+```shell
+python Multi_Identity_topk.py
+```
+
+After that, you can get the results from fold [results](./results), you can get some visualization results from a fold called `cam` such as:
+
+| Erasing results | Mask |
+|-|-|
+|![](results/example/attribute-o0.jpg)|![](results/example/attribute0.jpg)|
+|![](results/example/attribute-o1.jpg)|![](results/example/attribute1.jpg)|
+|![](results/example/attribute-o2.jpg)|![](results/example/attribute2.jpg)|
+|![](results/example/attribute-o3.jpg)|![](results/example/attribute3.jpg)|
+|![](results/example/attribute-o4.jpg)|![](results/example/attribute4.jpg)|
+
+another fold called `json` stores the experiment values, than you can use this to get quantitive results:
+
+```
+cd results
+python AUC_most_attributes.py
+```
+Pay attention to modify the placeholders in the python file, such as `args.Json_fold`.
+
+You can also use this to get the top-5 most representative attribute:
+
+```shell
+python Top_5_attributes.py
+```
+
+|||
+| ------ | -|
+|![](results/example/3.jpg)| ![](results/example/9.jpg) |
+|![](results/example/4.jpg)| ![](results/example/5.jpg) |
+
+## Interpreting Face Identification
+
+This section refer to the Section 4 of the paper. And also the results of Fig. 9.
+
+First, to get the inter results:
+
+```shell
+python quantity_single_person_uncertain.py
+```
+
+than:
+
+```shell
+cd results
+python uncertainty_visualization.py
+```
+
+you can get some visualization like:
+
+| | |
+| - | - |
+|![](results/example/n000002.jpg)| ![](results/example/n000003.jpg) |
+|![](results/example/n000004.jpg)| ![](results/example/n000005.jpg) |
+
+## Different Strategy
+
+There also some strategies in our paper, which mentioned in Section 5.5. For the topk strategy please refer to [Multi_Identity_topk.py](Multi_Identity_topk.py), and threshold strategy refers to [Multi_identity_thresh.py](Multi_identity_thresh.py).
+
+## Method Comparision
+
+Please refer to fold [Explainable-Framework-Comparison](./Explainable-Framework-Comparison).
+
 ## Acknowledgement
 
 If you find this work is helpful for your research, please consider cite our work:
