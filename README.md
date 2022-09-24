@@ -86,6 +86,14 @@ python Top_5_attributes.py
 |![](results/example/3.jpg)| ![](results/example/9.jpg) |
 |![](results/example/4.jpg)| ![](results/example/5.jpg) |
 
+## Discovering the most important attribute with a group of faces
+
+This section refer to Fig. 8 in our paper, like this:
+
+![](images/Fig8.jpg)
+
+please refer to [here](./External-Experience/The_most_special_attribute/)
+
 ## Interpreting Face Identification
 
 ![](images/Fig3.png)
