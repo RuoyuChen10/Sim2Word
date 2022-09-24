@@ -42,6 +42,12 @@ The uncertainty model mentioned in our paper is also released, the implementatio
 
 ![](https://github.com/RuoyuChen10/FaceTechnologyTool/blob/master/FaceRecognition/images/EDL.jpg)
 
+### Attribute Net
+
+We release our pre-trained attribute net model called `Face-Attributes2.pth`, please download and put it to fold `pre-trained`
+
+[Google Drive](https://drive.google.com/drive/folders/1upsYYgIzyzRuNEGCc7uPQ1AZ6NcHiPbD?usp=sharing)
+
 ### Self-training model
 
 If you want to train your own face recognition model, you can refer our work from [https://github.com/RuoyuChen10/FaceTechnologyTool/FaceRecognition](https://github.com/RuoyuChen10/FaceTechnologyTool/tree/master/FaceRecognition), you can try:
@@ -49,6 +55,14 @@ If you want to train your own face recognition model, you can refer our work fro
 - ArcFace Loss
 - CosFace Loss
 - Softmax Loss
+
+## Prepare
+
+please modify the variable `root_path` in file [utils.py](./utils.py):
+
+```python
+root_path = "...your_path.../Sim2Word/"
+```
 
 ## The frame work of interpreting similarity
 
