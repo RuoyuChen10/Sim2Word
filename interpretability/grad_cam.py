@@ -66,7 +66,7 @@ class GradCAM(object):
                 num+=1
         return num
 
-    def __call__(self, inputs, index=None):
+    def __call__(self, inputs, index=None, shape=(112,112)):
         """
 
         :param inputs: [1,3,H,W]
@@ -74,9 +74,9 @@ class GradCAM(object):
         :return:
         """
         if self.task_num == 1:
-            cam, class_id, scores = self.get_heatmap_single_out(inputs, index)
+            cam, class_id, scores = self.get_heatmap_single_out(inputs, index, shape)
         else:
-            cam, class_id, scores = self.get_heatmap_multi_out(inputs)
+            cam, class_id, scores = self.get_heatmap_multi_out(inputs, index, shape)
         return cam, class_id, scores
     
     def get_heatmap_single_out(self, inputs, index=None, shape=(112,112)):
