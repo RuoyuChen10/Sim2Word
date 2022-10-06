@@ -157,13 +157,22 @@ def main(args):
         ##### Mask Game #####
         # Image1 attributes
         seg_attr_interpretable1, index1, index2, attribute_id1, scores_attr1 = seg_attr.topk_Identity_Segmantically_Attributes_Interpretable(image1,image2,args.topk)
-
-        mkdir(os.path.join(args.output_dir,"visualization/n1"))
-        save_attributes_heatmap(path1,attribute_id1,seg_attr_interpretable1,os.path.join(args.output_dir,"visualization/n1"),args.heatmap_method)
+        if args.visualization == True:
+            mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method, "visualization/n1"))
+            save_attributes_heatmap(
+                path1, attribute_id1, seg_attr_interpretable1,
+                os.path.join(args.output_dir, "scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method, "visualization/n1"),
+                args.heatmap_method)
         seg_attr_interpretable1 = 1 - seg_attr_interpretable1
 
         # Image2 attributes
         seg_attr_interpretable2, _, __, attribute_id2, scores_attr2 = seg_attr.topk_Identity_Segmantically_Attributes_Interpretable(image2,image1,args.topk)
+        if args.visualization == True:
+            mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method, "visualization/n2"))
+            save_attributes_heatmap(
+                path2, attribute_id2, seg_attr_interpretable2,
+                os.path.join(args.output_dir, "scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method, "visualization/n2"),
+                args.heatmap_method)
         seg_attr_interpretable2 = 1 - seg_attr_interpretable2
 
         scores["class1"] = index1
@@ -249,7 +258,7 @@ def main(args):
         # except:
         #     pass
         num += 1
-        break
+        # break
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Interpretability Test')

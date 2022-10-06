@@ -68,7 +68,7 @@ root_path = "...your_path.../Sim2Word/"
 
 ![](images/Fig2.png)
 
-It's paper's Section 3 implementation, please refer to `Scores-sameid.py`, or refer to `Multi_Identity_topk.py` (set `topk = 1`).
+It's paper's Section 3 implementation, please refer to `Multi_Identity_topk.py` (set `topk = 1`).
 
 ```shell
 python Multi_Identity_topk.py
