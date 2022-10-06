@@ -30,6 +30,11 @@ Face_attributes_name = np.array([
     "Mouth Closed","Smiling","Big Lips","Big Nose","Pointy Nose"
 ])
 
+Gender = ["Male","Female"]
+Age = ["Young","Middle Aged","Senior"]
+Race = ["Asian","White","Black"]
+Hair_color = ["Black Hair","Blond Hair","Brown Hair","Gray Hair","Unknown Hair"]
+
 def Read_Datasets(Datasets_type):
     '''
     Read the path in different datasets

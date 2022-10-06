@@ -42,6 +42,51 @@ def Erasing(image,mask,method):
         image_mask = (image.transpose(2,0,1)*mask).transpose(1,2,0) + mask_random
     return image_mask
 
+def norm_image(image):
+    """
+    Normalization image
+    :param image: [H,W,C]
+    :return:
+    """
+    image = image.copy()
+    image -= np.max(np.min(image), 0)
+    image /= np.max(image)
+    image *= 255.
+    return np.uint8(image)
+
+def save_heatmap(image_input,mask,save_path):
+    '''
+    Save the heatmap of ones
+    '''
+    # Read image
+    image = cv2.imread(image_input)
+    # print(np.max(mask))
+    masks = (mask * 255).astype(np.uint8)
+    # masks = norm_image(mask).astype(np.uint8)
+    # mask->heatmap
+    heatmap = cv2.applyColorMap(masks, cv2.COLORMAP_JET)
+    heatmap = np.float32(heatmap)
+    # merge heatmap to original image
+    cam = 0.5*heatmap + 0.5*np.float32(image)
+    cv2.imwrite(save_path,cam)
+
+def save_attributes_heatmap(image_input, idx, masks, save_dir_path, heatmap_method):
+    '''
+    Save the attributes heatmap
+    '''
+    num = masks.shape[0]
+    for i in range(0,num):
+        if Face_attributes_name[i] in ["Gender","Age","Race","Hair_color"] or idx[i] == 0:
+            if Face_attributes_name[i] == "Gender":
+                attr_name = Gender[idx[i]]
+            elif Face_attributes_name[i] == "Age":
+                attr_name = Age[idx[i]]
+            elif Face_attributes_name[i] == "Race":
+                attr_name = Race[idx[i]]
+            else:
+                attr_name = Face_attributes_name[i]
+            save_heatmap(image_input,masks[i],os.path.join(save_dir_path,"Attribute-"+str(i)+'-'+attr_name+'-'+heatmap_method+'.jpg'))
+
 def main(args):
     # Path save
     mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method))
@@ -79,128 +124,132 @@ def main(args):
     
     num = 1
     for data in tqdm(datas):
-        try:
-            scores = {}
-            scores["Datasets"] = args.Datasets
-            scores["Heatmap-method"] = args.heatmap_method
-            scores["thresh"] = args.thresh
-            scores["topk"] = args.topk
-            scores["verification-net"] = args.verification_net
+        # try:
+        scores = {}
+        scores["Datasets"] = args.Datasets
+        scores["Heatmap-method"] = args.heatmap_method
+        scores["thresh"] = args.thresh
+        scores["topk"] = args.topk
+        scores["verification-net"] = args.verification_net
 
-            # Get path
-            path1 = os.path.join(os.getcwd(),image_dir_path,data.split(' ')[0])
-            path2 = os.path.join(os.getcwd(),image_dir_path,data.split(' ')[1])
-            if_same = data.split(' ')[2]
+        # Get path
+        path1 = os.path.join(os.getcwd(),image_dir_path,data.split(' ')[0])
+        path2 = os.path.join(os.getcwd(),image_dir_path,data.split(' ')[1])
+        if_same = data.split(' ')[2]
 
-            # Read Image
-            image1 = Path_Image_Preprocessing("VGGFace2",path1).numpy()
-            image2 = Path_Image_Preprocessing("VGGFace2",path2).numpy()
+        # Read Image
+        image1 = Path_Image_Preprocessing("VGGFace2",path1).numpy()
+        image2 = Path_Image_Preprocessing("VGGFace2",path2).numpy()
 
-            scores["image-path1"] = path1
-            scores["image-path2"] = path2
-            scores["match"] = int(if_same)
-            
-            # Verification image
-            image1_ = Path_Image_Preprocessing(args.verification_net,path1)
-            image2_ = Path_Image_Preprocessing(args.verification_net,path2)
-            
-            feature1 = F.normalize(verification_net(torch.unsqueeze(image1_, dim=0).cuda()),p=2,dim=1)
-            feature2 = F.normalize(verification_net(torch.unsqueeze(image2_, dim=0).cuda()),p=2,dim=1)
+        scores["image-path1"] = path1
+        scores["image-path2"] = path2
+        scores["match"] = int(if_same)
+        
+        # Verification image
+        image1_ = Path_Image_Preprocessing(args.verification_net,path1)
+        image2_ = Path_Image_Preprocessing(args.verification_net,path2)
+        
+        feature1 = F.normalize(verification_net(torch.unsqueeze(image1_, dim=0).cuda()),p=2,dim=1)
+        feature2 = F.normalize(verification_net(torch.unsqueeze(image2_, dim=0).cuda()),p=2,dim=1)
 
-            scores["similarity"] = torch.cosine_similarity(feature1[0], feature2[0], dim=0).item()
+        scores["similarity"] = torch.cosine_similarity(feature1[0], feature2[0], dim=0).item()
 
-            ##### Mask Game #####
-            # Image1 attributes
-            seg_attr_interpretable1, index1, index2, attribute_id1, scores_attr1 = seg_attr.topk_Identity_Segmantically_Attributes_Interpretable(image1,image2,args.topk)
-            seg_attr_interpretable1 = 1 - seg_attr_interpretable1
+        ##### Mask Game #####
+        # Image1 attributes
+        seg_attr_interpretable1, index1, index2, attribute_id1, scores_attr1 = seg_attr.topk_Identity_Segmantically_Attributes_Interpretable(image1,image2,args.topk)
 
-            # Image2 attributes
-            seg_attr_interpretable2, _, __, attribute_id2, scores_attr2 = seg_attr.topk_Identity_Segmantically_Attributes_Interpretable(image2,image1,args.topk)
-            seg_attr_interpretable2 = 1 - seg_attr_interpretable2
+        mkdir(os.path.join(args.output_dir,"visualization/n1"))
+        save_attributes_heatmap(path1,attribute_id1,seg_attr_interpretable1,os.path.join(args.output_dir,"visualization/n1"),args.heatmap_method)
+        seg_attr_interpretable1 = 1 - seg_attr_interpretable1
 
-            scores["class1"] = index1
-            scores["class2"] = index2
+        # Image2 attributes
+        seg_attr_interpretable2, _, __, attribute_id2, scores_attr2 = seg_attr.topk_Identity_Segmantically_Attributes_Interpretable(image2,image1,args.topk)
+        seg_attr_interpretable2 = 1 - seg_attr_interpretable2
 
-            scores["Attribute1-class"] = attribute_id1
-            scores["Attribute1-score"] = scores_attr1
-            scores["Attribute2-class"] = attribute_id2
-            scores["Attribute2-score"] = scores_attr2
+        scores["class1"] = index1
+        scores["class2"] = index2
 
-            # Dict for the game
-            attr1 = {}
-            attr2 = {}
-            attr3 = {}
+        scores["Attribute1-class"] = attribute_id1
+        scores["Attribute1-score"] = scores_attr1
+        scores["Attribute2-class"] = attribute_id2
+        scores["Attribute2-score"] = scores_attr2
 
-            image_1 = cv2.imread(path1)
-            image_2 = cv2.imread(path2)
+        # Dict for the game
+        attr1 = {}
+        attr2 = {}
+        attr3 = {}
 
-            seg_attr_interpretable1[seg_attr_interpretable1<1-args.thresh] = 0
-            seg_attr_interpretable1[seg_attr_interpretable1>1-args.thresh] = 1
+        image_1 = cv2.imread(path1)
+        image_2 = cv2.imread(path2)
 
-            seg_attr_interpretable2[seg_attr_interpretable2<1-args.thresh] = 0
-            seg_attr_interpretable2[seg_attr_interpretable2>1-args.thresh] = 1
+        seg_attr_interpretable1[seg_attr_interpretable1<1-args.thresh] = 0
+        seg_attr_interpretable1[seg_attr_interpretable1>1-args.thresh] = 1
 
-            for i in range(0,seg_attr_interpretable1.shape[0]):
-                feature_attr_1 = None
-                feature_attr_2 = None
-                # No nan of image 1:
+        seg_attr_interpretable2[seg_attr_interpretable2<1-args.thresh] = 0
+        seg_attr_interpretable2[seg_attr_interpretable2>1-args.thresh] = 1
 
-                Erasing_image = Erasing(image_1,seg_attr_interpretable1[i],args.Erasing_method)
+        for i in range(0,seg_attr_interpretable1.shape[0]):
+            feature_attr_1 = None
+            feature_attr_2 = None
+            # No nan of image 1:
 
-                if args.visualization == True:
-                    mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n1-n2","mask"))
-                    mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n1-n2","images"))
-                    # Save the Visualization Results
-                    cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
-                                                str(num)+"-n1-n2","mask","attribute"+str(i)+'.jpg'),
-                                seg_attr_interpretable1[i]*255)
-                    cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
-                                                str(num)+"-n1-n2","images","attribute-o"+str(i)+'.jpg'),
-                                Erasing_image)
+            Erasing_image = Erasing(image_1,seg_attr_interpretable1[i],args.Erasing_method)
 
-                if args.calculate_similarity == True:
-                    inputs = Image_Preprocessing(args.verification_net, Erasing_image)
-                    feature_attr_1 = F.normalize(verification_net(torch.unsqueeze(inputs, dim=0).cuda()),p=2,dim=1)
+            if args.visualization == True:
+                mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n1-n2","mask"))
+                mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n1-n2","images"))
+                # Save the Visualization Results
+                cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
+                                            str(num)+"-n1-n2","mask","attribute"+str(i)+'.jpg'),
+                            seg_attr_interpretable1[i]*255)
+                cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
+                                            str(num)+"-n1-n2","images","attribute-o"+str(i)+'.jpg'),
+                            Erasing_image)
 
-                    attr1["image1-f_attr_"+str(i)] = (torch.cosine_similarity(feature_attr_1[0], feature1[0], dim=0).item(),
-                                                    torch.cosine_similarity(feature_attr_1[0], feature2[0], dim=0).item())
-                # No nan of image 2:
-                
-                Erasing_image = Erasing(image_2,seg_attr_interpretable2[i],args.Erasing_method)
-
-                if args.visualization == True:
-                    mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n2-n1","mask"))
-                    mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n2-n1","images"))
-                    # Save the Visualization Results
-                    cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
-                                                str(num)+"-n2-n1","mask","attribute"+str(i)+'.jpg'),
-                                seg_attr_interpretable2[i]*255)
-                    cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
-                                                str(num)+"-n2-n1","images","attribute-o"+str(i)+'.jpg'),
-                                Erasing_image)
-
-                if args.calculate_similarity == True:
-                    inputs = Image_Preprocessing(args.verification_net,Erasing_image)
-                    feature_attr_2 = F.normalize(verification_net(torch.unsqueeze(inputs, dim=0).cuda()),p=2,dim=1)
-
-                    attr2["image2-f_attr_"+str(i)] = (torch.cosine_similarity(feature_attr_2[0], feature2[0], dim=0).item(),
-                                                    torch.cosine_similarity(feature_attr_2[0], feature1[0], dim=0).item())
-                
-                # For both masked
-                if feature_attr_1 is not None and feature_attr_2 is not None:
-                    if args.calculate_similarity == True:
-                        attr3["Both_masked-f_attr_"+str(i)] = torch.cosine_similarity(feature_attr_1[0], feature_attr_2[0], dim=0).item()
-            
             if args.calculate_similarity == True:
-                scores["attributes-image1"] = attr1
-                scores["attributes-image2"] = attr2
-                scores["attributes-both-masked"] = attr3
+                inputs = Image_Preprocessing(args.verification_net, Erasing_image)
+                feature_attr_1 = F.normalize(verification_net(torch.unsqueeze(inputs, dim=0).cuda()),p=2,dim=1)
 
-            with open(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"json",str(num)+".json"), "w") as f:
-                f.write(json.dumps(scores, ensure_ascii=False, indent=4, separators=(',', ':')))
-        except:
-            pass
+                attr1["image1-f_attr_"+str(i)] = (torch.cosine_similarity(feature_attr_1[0], feature1[0], dim=0).item(),
+                                                torch.cosine_similarity(feature_attr_1[0], feature2[0], dim=0).item())
+            # No nan of image 2:
+            
+            Erasing_image = Erasing(image_2,seg_attr_interpretable2[i],args.Erasing_method)
+
+            if args.visualization == True:
+                mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n2-n1","mask"))
+                mkdir(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",str(num)+"-n2-n1","images"))
+                # Save the Visualization Results
+                cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
+                                            str(num)+"-n2-n1","mask","attribute"+str(i)+'.jpg'),
+                            seg_attr_interpretable2[i]*255)
+                cv2.imwrite(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"cam",
+                                            str(num)+"-n2-n1","images","attribute-o"+str(i)+'.jpg'),
+                            Erasing_image)
+
+            if args.calculate_similarity == True:
+                inputs = Image_Preprocessing(args.verification_net,Erasing_image)
+                feature_attr_2 = F.normalize(verification_net(torch.unsqueeze(inputs, dim=0).cuda()),p=2,dim=1)
+
+                attr2["image2-f_attr_"+str(i)] = (torch.cosine_similarity(feature_attr_2[0], feature2[0], dim=0).item(),
+                                                torch.cosine_similarity(feature_attr_2[0], feature1[0], dim=0).item())
+            
+            # For both masked
+            if feature_attr_1 is not None and feature_attr_2 is not None:
+                if args.calculate_similarity == True:
+                    attr3["Both_masked-f_attr_"+str(i)] = torch.cosine_similarity(feature_attr_1[0], feature_attr_2[0], dim=0).item()
+        
+        if args.calculate_similarity == True:
+            scores["attributes-image1"] = attr1
+            scores["attributes-image2"] = attr2
+            scores["attributes-both-masked"] = attr3
+
+        with open(os.path.join(args.output_dir,"scores-group-"+args.Datasets+"-"+args.verification_net+"-topk-"+str(args.topk)+"-erase-"+args.Erasing_method,"json",str(num)+".json"), "w") as f:
+            f.write(json.dumps(scores, ensure_ascii=False, indent=4, separators=(',', ':')))
+        # except:
+        #     pass
         num += 1
+        break
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Interpretability Test')

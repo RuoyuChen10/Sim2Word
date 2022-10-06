@@ -199,7 +199,7 @@ class Segmantically_Attributes(object):
             inputs2 = inputs2.cuda()
 
         # Mask
-        mask1,mask2,index1,index2 = self.topk_average_mask(inputs1,inputs2,self.cam1,topk_num)
+        mask1,mask2,index1,index2 = self.topk_average_mask(inputs1, inputs2, self.cam1, topk_num)
 
         discriminant = self.Discriminant(mask1.numpy(), mask2.numpy())
 
@@ -211,9 +211,10 @@ class Segmantically_Attributes(object):
 
         mask = discriminant * mask_attr
 
-        for i in range(0,mask.shape[0]):
-            mask[i] -= np.min(mask[i])
-            mask[i] /= np.max(mask[i])
+        ## Needn't normlization
+        # for i in range(0,mask.shape[0]):
+        #     mask[i] -= np.min(mask[i])
+        #     mask[i] /= np.max(mask[i])
         return mask, index1, index2, attribute_id, scores_attr
 
     def thresh_average_mask(self, inputs1, inputs2, cam, thresh):

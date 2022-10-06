@@ -66,7 +66,7 @@ class GradCAM(object):
                 num+=1
         return num
 
-    def __call__(self, inputs, index=None, shape=(112,112)):
+    def __call__(self, inputs, index=None, shape=(224,224)):
         """
 
         :param inputs: [1,3,H,W]
