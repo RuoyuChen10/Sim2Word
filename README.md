@@ -64,6 +64,30 @@ please modify the variable `root_path` in file [utils.py](./utils.py):
 root_path = "...your_path.../Sim2Word/"
 ```
 
+## Visualization Tutorial
+
+Please refer [Visualization_tutorial.ipynb](./Visualization_tutorial.ipynb) to see the details
+
+Input:
+
+| Input Face  |  Counter Face  |
+| - | - |
+|![](images/face1-alignment.jpg) | ![](images/face2-alignment.jpg) |
+
+ID related map:
+
+| ID MAP  |  Counter ID MAP  | Counterfactual MAP |
+| - | - | - |
+|![](images/results/%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_Ht.jpg) | ![](images/results/%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_Hf.jpg) | ![](images/results/%D0%97%D0%B5%D0%BB%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_Hd.jpg) |
+
+Attribute map:
+
+![](./images/results/AttributeMap.jpg)
+
+Joint Representation map:
+
+![](./images/results/J.jpg)
+
 ## The frame work of interpreting similarity
 
 ![](images/Fig2.png)

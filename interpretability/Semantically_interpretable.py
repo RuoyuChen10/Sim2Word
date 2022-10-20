@@ -186,7 +186,8 @@ class Segmantically_Attributes(object):
         # the mask shape is [c,w,h]
         return mask1, mask2, index1, index2
     
-    def topk_Identity_Segmantically_Attributes_Interpretable(self,Image1,Image2,topk_num=3):
+    def topk_Identity_Segmantically_Attributes_Interpretable(
+        self, Image1, Image2, topk_num=3, visualization = False):
         '''
         The Indentity choose the top k classes and stack
         '''
@@ -199,7 +200,7 @@ class Segmantically_Attributes(object):
             inputs2 = inputs2.cuda()
 
         # Mask
-        mask1,mask2,index1,index2 = self.topk_average_mask(inputs1, inputs2, self.cam1, topk_num)
+        mask1, mask2, index1, index2 = self.topk_average_mask(inputs1, inputs2, self.cam1, topk_num)
 
         discriminant = self.Discriminant(mask1.numpy(), mask2.numpy())
 
@@ -215,7 +216,10 @@ class Segmantically_Attributes(object):
         # for i in range(0,mask.shape[0]):
         #     mask[i] -= np.min(mask[i])
         #     mask[i] /= np.max(mask[i])
-        return mask, index1, index2, attribute_id, scores_attr
+        if visualization == True:
+            return mask, index1, index2, attribute_id, scores_attr, mask1.numpy(), mask2.numpy(), discriminant, mask_attr
+        else:
+            return mask, index1, index2, attribute_id, scores_attr
 
     def thresh_average_mask(self, inputs1, inputs2, cam, thresh):
         '''
