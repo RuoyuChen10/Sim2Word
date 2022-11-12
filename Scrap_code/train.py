@@ -25,7 +25,12 @@ class MultiClassLoss(nn.Module):
     def __init__(self):
         super(MultiClassLoss, self).__init__()
         self.criterion = nn.CrossEntropyLoss()
+        # sefl.loss2 = 2分类损失
     def forward(self, outs, labels):
+        # label = [
+        #   [1,3,4],
+        #   [3,5,6]
+        # ]
         loss = 0
         loss_information = []
         for out,label in zip(outs,labels):
@@ -79,7 +84,7 @@ def optimize_param(model, train_loader, optimizer, loss, datasets_path, epoch):
             # Output
             out1,out2,out3 = model(train_data)
             # Loss
-            losses,loss_information = loss([out1,out2,out3],[label1,label2,label3])
+            losses,loss_information = loss([out1,out2,out3],[label1,label2,label3]) # 输入是List就行
             # Accuracy
             correct1,correct2,correct3 = Compute_Accuracy(out1,out2,out3,label1,label2,label3)
             # Information

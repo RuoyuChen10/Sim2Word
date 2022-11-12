@@ -98,14 +98,7 @@ It's paper's Section 3 implementation, please refer to `Multi_Identity_topk.py` 
 python Multi_Identity_topk.py
 ```
 
-After that, you can get the results from fold [results](./results), you can get some visualization results from a fold called `cam` such as:
-
-||||||
-|-|-|-|-|-|
-|![](results/example/attribute-o0.jpg)|![](results/example/attribute-o1.jpg)| ![](results/example/attribute-o2.jpg)|![](results/example/attribute-o3.jpg)|![](results/example/attribute-o4.jpg)|
-|![](results/example/attribute0.jpg)|![](results/example/attribute1.jpg)|![](results/example/attribute2.jpg)|![](results/example/attribute3.jpg)|![](results/example/attribute4.jpg)|
-
-another fold called `json` stores the experiment values, than you can use this to get quantitive results:
+After that, you can get the results from fold [results](./results), you can get some visualization results from a fold called `cam`, another fold called `json` stores the experiment values, than you can use this to get quantitive results:
 
 ```
 cd results
