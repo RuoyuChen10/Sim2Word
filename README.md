@@ -88,6 +88,10 @@ Joint Representation map:
 
 ![](./images/results/J.jpg)
 
+Sorted results:
+
+![](./images/results/sort.jpg)
+
 ## The frame work of interpreting similarity
 
 ![](images/Fig2.png)

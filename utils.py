@@ -283,18 +283,18 @@ def Erasing(image, mask, method):
     method: black, white, mean, random
     '''
     if method == "black":
-        image_mask = (image.transpose(2,0,1)*mask).transpose(1,2,0)
+        image_mask = (image.transpose(2,0,1) * mask).transpose(1,2,0)
     elif method == "white":
-        mask_white = np.ones(mask.shape)*(1-mask)*255
-        image_mask = (image.transpose(2,0,1)*mask+mask_white).transpose(1,2,0)
+        mask_white = np.ones(mask.shape) * (1-mask) * 255
+        image_mask = (image.transpose(2,0,1) * mask + mask_white).transpose(1,2,0)
     elif method == "mean":
-        mask_mean = np.ones(mask.shape)*(1-mask)*125
-        image_mask = (image.transpose(2,0,1)*mask+mask_mean).transpose(1,2,0)
+        mask_mean = np.ones(mask.shape) * (1-mask) * 125
+        image_mask = (image.transpose(2,0,1) * mask + mask_mean).transpose(1,2,0)
     elif method == "random":
-        mask_random = np.ones(mask.shape)*(1-mask) * np.random.randint(0,256,(3,mask.shape[0],mask.shape[1]))
+        mask_random = np.ones(mask.shape) * (1 - mask) * np.random.randint(0,256,(3, mask.shape[0], mask.shape[1]))
         mask_random = mask_random.transpose(1,2,0)
-        image_mask = (image.transpose(2,0,1)*mask).transpose(1,2,0) + mask_random
-    return image_mask
+        image_mask = (image.transpose(2,0,1) * mask).transpose(1,2,0) + mask_random
+    return image_mask.astype(np.uint8)
 
 def relu_evidence(y):
     return F.relu(y)
