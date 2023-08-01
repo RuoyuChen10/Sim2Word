@@ -10,11 +10,11 @@ The official implementation of our work: Sim2Word: Explaining Similarity with Re
 
 ## Pre-train Model
 
-In our work we use 3 types of model for evaluation, `VGGFace Net`, `ArcFace Net`, and `CosFace Net`.
+In our work, we use 3 types of models for evaluation, `VGGFace Net`, `ArcFace Net`, and `CosFace Net`.
 
 ### VGGFace Net
 
-First download the pre-trained model, the model is convert from coffee version from official file, don't worry it doesn't work.
+First download the pre-trained model, the model is converted from the coffee version from the official file, don't worry it doesn't work.
 
 | Arch type `VGGFace Net`         |                        download link                         |
 | :----------------- | :----------------------------------------------------------: |
@@ -23,14 +23,14 @@ First download the pre-trained model, the model is convert from coffee version f
 | `resnet50_scratch` | [link](https://drive.google.com/open?id=1gy9OJlVfBulWkIEnZhGpOLu084RgHw39) |
 | `senet50_scratch`  | [link](https://drive.google.com/open?id=11Xo4tKir1KF8GdaTCMSbEQ9N4LhshJNP) |
 
-Download model is `pkl` files.
+The download model is `pkl` file.
 
 ### ArcFace and CosFace checkpoints
 
-The pre-trained model of ArcFace and CosFace is from a project on github: [insightface](https://github.com/deepinsight/insightface)
+The pre-trained model of ArcFace and CosFace is from a project on GitHub: [insightface](https://github.com/deepinsight/insightface)
 
 - The models are available for non-commercial research purposes only.  
-- All models can be found in here.  
+- All models can be found here.  
 - [Baidu Yun Pan](https://pan.baidu.com/s/1CL-l4zWqsI1oDuEEYVhj-g): e8pw  
 - [OneDrive](https://1drv.ms/u/s!AswpsDO2toNKq0lWY69vN58GR6mw?e=p9Ov5d)
 
@@ -50,7 +50,7 @@ We release our pre-trained attribute net model called `Face-Attributes2.pth`, pl
 
 ### Self-training model
 
-If you want to train your own face recognition model, you can refer our work from [https://github.com/RuoyuChen10/FaceTechnologyTool/FaceRecognition](https://github.com/RuoyuChen10/FaceTechnologyTool/tree/master/FaceRecognition), you can try:
+If you want to train your own face recognition model, you can refer to our work from [https://github.com/RuoyuChen10/FaceTechnologyTool/FaceRecognition](https://github.com/RuoyuChen10/FaceTechnologyTool/tree/master/FaceRecognition), you can try:
 
 - ArcFace Loss
 - CosFace Loss
@@ -74,7 +74,7 @@ Input:
 | - | - |
 |![](images/face1-alignment.jpg) | ![](images/face2-alignment.jpg) |
 
-ID related map:
+ID-related map:
 
 | ID MAP  |  Counter ID MAP  | Counterfactual MAP |
 | - | - | - |
@@ -92,23 +92,23 @@ Sorted results:
 
 ![](./images/results/sort.jpg)
 
-## The frame work of interpreting similarity
+## The framework of interpreting similarity
 
 ![](images/Fig2.png)
 
-It's paper's Section 3 implementation, please refer to `Multi_Identity_topk.py` (set `topk = 1`).
+It's the paper's Section 3 implementation, please refer to `Multi_Identity_topk.py` (set `topk = 1`).
 
 ```shell
 python Multi_Identity_topk.py
 ```
 
-After that, you can get the results from fold [results](./results), you can get some visualization results from a fold called `cam`, another fold called `json` stores the experiment values, than you can use this to get quantitive results:
+After that, you can get the results from fold [results](./results), you can get some visualization results from a fold called `cam`, and another fold called `json` stores the experiment values, then you can use this to get quantitive results:
 
 ```
 cd results
 python AUC_most_attributes.py
 ```
-Pay attention to modify the placeholders in the python file, such as `args.Json_fold`.
+Pay attention to modifying the placeholders in the Python file, such as `args.Json_fold`.
 
 You can also use this to get the top-5 most representative attribute:
 
@@ -123,7 +123,7 @@ python Top_5_attributes.py
 
 ## Discovering the most important attribute with a group of faces
 
-This section refer to Fig. 8 in our paper, like this:
+This section refers to Fig. 8 in our paper, like this:
 
 ![](images/Fig8.jpg)
 
@@ -133,7 +133,7 @@ please refer to [here](./External-Experience/The_most_special_attribute/)
 
 ![](images/Fig3.png)
 
-This section refer to the Section 4 of the paper. And also the results of Fig. 9.
+This section refers to Section 4 of the paper. And also the results of Fig. 9.
 
 First, to get the inter results:
 
@@ -157,7 +157,7 @@ you can get some visualization like:
 
 ## Different Strategy
 
-There also some strategies in our paper, which mentioned in Section 5.5. For the topk strategy please refer to [Multi_Identity_topk.py](Multi_Identity_topk.py), and threshold strategy refers to [Multi_identity_thresh.py](Multi_identity_thresh.py).
+There are also some strategies in our paper, which are mentioned in Section 5.5. For the topk strategy please refer to [Multi_Identity_topk.py](Multi_Identity_topk.py), and threshold strategy refers to [Multi_identity_thresh.py](Multi_identity_thresh.py).
 
 ## Method Comparision
 
@@ -167,7 +167,7 @@ Please refer to fold [Explainable-Framework-Comparison](./Explainable-Framework-
 
 ## Acknowledgement
 
-If you find this work is helpful for your research, please consider cite our work:
+If you find this work helpful for your research, please consider citing our work:
 
 ```bibtex
 @article{chen2022sim2word,
